@@ -45,8 +45,10 @@ router.get("/comics", async (req, res) => {
   }
   const skip = (page - 1) * limit;
 
+  let sortTitle = "title";
+
   // URL
-  let url = `https://gateway.marvel.com/v1/public/comics?limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
+  let url = `https://gateway.marvel.com/v1/public/comics?orderBy=${sortTitle}&limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
   //   https://gateway.marvel.com:443/v1/public/comics?apikey=b5973364a359065c34f06eb838ac0d2d
 
   // console.log(response.data.data);
