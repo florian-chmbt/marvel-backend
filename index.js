@@ -66,6 +66,6 @@ app.all("*", (req, res) => {
 });
 
 // SERVER
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || process.env.LOCALPORT, () => {
   console.log(`Server ${process.env.PORT} started`);
 });
