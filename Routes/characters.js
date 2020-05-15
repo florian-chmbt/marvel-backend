@@ -68,16 +68,18 @@ router.get("/characters", async (req, res) => {
   const skip = (page - 1) * limit;
 
   // URL
-  let url = `https://gateway.marvel.com/v1/public/characters?limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
-
+  let url1 = `https://gateway.marvel.com/v1/public/characters?limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
+  let url2 = `https://gateway.marvel.com/v1/public/characters?limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
   // console.log(response.data.data);
   try {
-    const response = await axios.get(url);
-    const characters = response.data.data;
+    const response1 = await axios.get(url1);
+    const characters1 = response.data.data;
+    const response2 = await axios.get(url2);
+    const characters2 = response.data.data;
 
     // REPONSE SERVEUR
     // return res.json("Hello marvel");
-    return res.json(characters);
+    return res.json(characters1);
     // Catch
   } catch (error) {
     return res.status(400).json({ message: error.message });

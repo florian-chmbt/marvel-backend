@@ -28,14 +28,29 @@ const ts = Math.floor(timestamp); // => 1582129584
 // 3) HASH
 const hash = md5(ts + private_Key + public_Key);
 // console.log(ts); // => 1582129584
-// console.log(hash); // => 7408e71006c87a79b21594220c35577c
 
-// ROUTE SERVEUR : CRUD READ ------------------------------------------------
+// console.log(hash); // => 7408e71006c87a79b21594220c35577c
+// ROUTE SERVEUR : CRUD READ ----------------------------------------------------------------------------------------
+
 router.get("/comics", async (req, res) => {
   console.log(req.query);
   console.log(req.query.page);
 
-  // FILTRE QUERY : PAGE
+  // FILTRE : QUERY (FILTRE TITRE)
+
+  let title = req.query.sort;
+
+  if (!title) {
+    // * si le filtre page n'est pas défini en requête
+    title = ""; // Forcer à afficher la première page
+  } else {
+    title = "&titleStartsWith=" + title;
+  }
+
+  console.log(title);
+
+  // $titleStartsWith=${title}
+  // FILTRE : QUERY (PAGE)
 
   const limit = 100;
   let page = Number(req.query.page);
@@ -45,20 +60,26 @@ router.get("/comics", async (req, res) => {
   }
   const skip = (page - 1) * limit;
 
+  // FILTRE : FILTRE TITRE
   let sortTitle = "title";
 
   // URL
-  let url = `https://gateway.marvel.com/v1/public/comics?orderBy=${sortTitle}&limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
-  //   https://gateway.marvel.com:443/v1/public/comics?apikey=b5973364a359065c34f06eb838ac0d2d
+  let url1 = `https://gateway.marvel.com/v1/public/comics?orderBy=${sortTitle}&limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
+  let url2 = `https://gateway.marvel.com/v1/public/comics?orderBy=${sortTitle}&titleStartsWith=amazing&limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
+  let url3 = `https://gateway.marvel.com/v1/public/comics?orderBy=${sortTitle}${title}&limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
 
   // console.log(response.data.data);
   try {
-    const response = await axios.get(url);
-    const characters = response.data.data;
+    const response1 = await axios.get(url1);
+    const comics = response1.data.data;
+    const response2 = await axios.get(url2);
+    const searchComics = response2.data.data;
+    const response3 = await axios.get(url3);
+    const searchComics3 = response3.data.data;
 
     // REPONSE SERVEUR
     // return res.json("Hello marvel");
-    return res.json(characters);
+    return res.json(searchComics3);
     // Catch
   } catch (error) {
     return res.status(400).json({ message: error.message });
