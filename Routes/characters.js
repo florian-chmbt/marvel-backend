@@ -30,32 +30,23 @@ const hash = md5(ts + private_Key + public_Key);
 // console.log(ts); // => 1582129584
 // console.log(hash); // => 7408e71006c87a79b21594220c35577c
 
-// TESTER LA REQUETE ENVOYE VERS API AVEC CONSOLE ---------------------------------------------
-const fetchData = axios
-  .get(
-    // * METHODE QUERY :
-    `https://gateway.marvel.com/v1/public/characters?ts=${ts}&apikey=${public_Key}&hash=${hash}`
-
-    // * METHODE PARAMS :
-    //       "https://gateway.marvel.com/v1/public/characters", {
-    //     params: {
-    //       apikey: public_Key,
-    //       ts: ts,
-    //       hash: hash,
-    //     },
-    //     Headers: {
-    //       Accept: "*/*",
-    //     },
-    //   }
-  )
-  .then((response) => {
-    // console.log(response.data); // TEST DE LA REPONSE DE LA REQUETE VERS L'API
-  });
-
 // ROUTE SERVEUR : CRUD READ ------------------------------------------------
+
 router.get("/characters", async (req, res) => {
   console.log(req.query);
   console.log(req.query.page);
+  console.log(req.query.search);
+
+  // FILTRE : QUERY (FILTRE TITRE)
+
+  let name = req.query.search;
+
+  if (!name) {
+    // * si le filtre page n'est pas défini en requête
+    name = ""; // Forcer à afficher la première page
+  } else {
+    name = "&nameStartsWith=" + name;
+  }
 
   // FILTRE QUERY : PAGE
 
@@ -67,19 +58,24 @@ router.get("/characters", async (req, res) => {
   }
   const skip = (page - 1) * limit;
 
+  // FILTRE : FILTRE TITRE
+  let sortName = "name";
+
   // URL
   let url1 = `https://gateway.marvel.com/v1/public/characters?limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
-  let url2 = `https://gateway.marvel.com/v1/public/characters?limit=${limit}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
+  let url2 = `https://gateway.marvel.com/v1/public/characters?limit=${limit}${name}&offset=${skip}&ts=${ts}&apikey=${public_Key}&hash=${hash}`;
+
   // console.log(response.data.data);
+
   try {
-    const response1 = await axios.get(url1);
-    const characters1 = response.data.data;
+    // const response1 = await axios.get(url1);
+    // const characters1 = response1.data.data;
     const response2 = await axios.get(url2);
-    const characters2 = response.data.data;
+    const characters2 = response2.data.data;
 
     // REPONSE SERVEUR
     // return res.json("Hello marvel");
-    return res.json(characters1);
+    return res.json(characters2);
     // Catch
   } catch (error) {
     return res.status(400).json({ message: error.message });

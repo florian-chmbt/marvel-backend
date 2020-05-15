@@ -14,7 +14,7 @@ app.use(cors());
 // IMPORTER ROUTER
 const router = express.Router();
 
-// IMPORTER AUTRES PACKAGES
+// IMPORTERS PACKAGES
 
 // 1) API KEY
 const public_Key = process.env.MARVEL_PUBLIC_APIKEY;
@@ -28,17 +28,18 @@ const ts = Math.floor(timestamp); // => 1582129584
 // 3) HASH
 const hash = md5(ts + private_Key + public_Key);
 // console.log(ts); // => 1582129584
-
 // console.log(hash); // => 7408e71006c87a79b21594220c35577c
+
 // ROUTE SERVEUR : CRUD READ ----------------------------------------------------------------------------------------
 
 router.get("/comics", async (req, res) => {
-  console.log(req.query);
-  console.log(req.query.page);
+  // console.log(req.query);
+  // console.log(req.query.page);
+  // console.log(req.query.search);
 
   // FILTRE : QUERY (FILTRE TITRE)
 
-  let title = req.query.sort;
+  let title = req.query.search;
 
   if (!title) {
     // * si le filtre page n'est pas défini en requête
@@ -49,7 +50,6 @@ router.get("/comics", async (req, res) => {
 
   console.log(title);
 
-  // $titleStartsWith=${title}
   // FILTRE : QUERY (PAGE)
 
   const limit = 100;
@@ -70,16 +70,16 @@ router.get("/comics", async (req, res) => {
 
   // console.log(response.data.data);
   try {
-    const response1 = await axios.get(url1);
-    const comics = response1.data.data;
-    const response2 = await axios.get(url2);
-    const searchComics = response2.data.data;
+    // const response1 = await axios.get(url1);
+    // const comics = response1.data.data;
+    // const response2 = await axios.get(url2);
+    // const comics2 = response2.data.data;
     const response3 = await axios.get(url3);
-    const searchComics3 = response3.data.data;
+    const comics3 = response3.data.data;
 
     // REPONSE SERVEUR
     // return res.json("Hello marvel");
-    return res.json(searchComics3);
+    return res.json(comics3);
     // Catch
   } catch (error) {
     return res.status(400).json({ message: error.message });

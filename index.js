@@ -8,11 +8,8 @@ npm install cors     -> débloque une mesure de sécurité des navigteur web pou
 ---------------------
 npx nodemon index.js
 -------------------
- floria538612311!
- public key / b5973364a359065c34f06eb838ac0d2d
- private key : 4cb0e428ed955a2ae0087d69adde4564533595d1
- developer.marvel.com
 */
+
 // Activation des variables d'environnement du fichier `.env`
 require("dotenv").config();
 
@@ -44,21 +41,6 @@ app.all("/", (req, res) => {
   // res.send({"Page not found" });
 });
 
-// Make a request for a user with a given ID
-/* axios
-  .get("/user?ID=12345")
-  .then(function (response) {
-    // handle success
-    console.log(response);
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-  .finally(function () {
-    // always executed
-  }); */
-
 // ALL ROUTE
 app.all("*", (req, res) => {
   res.status(404).json({ message: "Page not found" });
@@ -67,5 +49,5 @@ app.all("*", (req, res) => {
 
 // SERVER
 app.listen(process.env.PORT || process.env.LOCALPORT, () => {
-  console.log(`Server ${process.env.PORT} started`);
+  console.log(`Server ${process.env.LOCALPORT} started`);
 });
